@@ -1,0 +1,60 @@
+@font-face {
+    font-family: TechnoRaceItalic-font;
+    src: url('techno-race-italic-font/TechnoRaceItalic-eZRWe.otf')  format('truetype');
+  }
+
+
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url("./game_background.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: TechnoRaceItalic-font;
+}
+
+.container {
+    text-align: center;
+    color: #130303;
+}
+
+h1 {
+    font-size: 7em;
+    color: aliceblue;
+    text-shadow: 4px 4px 4px #000;
+    -webkit-text-stroke: 2px black; /* Outline color */
+    color: white; /* Inside color */
+    margin: 0;
+
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.start-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+}
+
+.story-button {
+    background-color: #008CBA; /* Blue */
+    color: white;
+    border: none;
+}
+
+
