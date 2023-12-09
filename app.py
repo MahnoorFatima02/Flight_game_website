@@ -13,9 +13,18 @@ conn = mysql.connector.connect(
 )
 
 @app.route('/')
-def index():
+def gamewebsite():
+    return render_template('game_website.html')
+@app.route('/loginpage')
+def loginpage():
     return render_template('login.html')
-@app.route('/login', methods=['POST'])
+@app.route('/story')
+def story():
+    return render_template('story.html')
+@app.route('/mainpage')
+def mainpage():
+    return render_template('main_page.html')
+@app.route('/loginpage/login', methods=['POST'])
 def login():
     data = request.get_json()
     username = data.get('username')
@@ -36,7 +45,7 @@ def login():
         response = jsonify({'success': False})
         return response
 
-@app.route('/register', methods=['POST'])
+@app.route('/loginpage/register', methods=['POST'])
 def register():
     data = request.get_json()
     username = data.get('username')
