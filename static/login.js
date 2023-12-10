@@ -1,4 +1,6 @@
 async function login() {
+    var audio = document.getElementById('buttonClickSound');
+    audio.play();
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
@@ -21,6 +23,8 @@ async function login() {
 }
 
 async function register() {
+    var audio = document.getElementById('buttonClickSound');
+    audio.play();
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 

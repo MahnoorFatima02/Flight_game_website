@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paragraph Transition</title>
+    <title>Login Page</title>
     <link rel="stylesheet" href="../static/story.css">
 </head>
 <body>
+<audio id="backgroundMusic" loop autoplay>
+    <source src="../static/backgroundmusic.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+</audio>
+ <audio id="buttonClickSound" src="../static/button.mp3" preload="auto"></audio>
     <div class="fade-in">
         <div class="paragraph-container">
             <img src="../static/pic1.png" alt="Image 1" class="small-image">
@@ -34,7 +39,7 @@ You can gain or lose money, or change how efficiently your plane uses fuel.<br>
     </div>
     <script src="../static/story.js"></script>
     <div class="goToHome">
-        <a href= "/" class="back-button">Go Back</a>
+        <a class="back-button" onclick="playSoundAndRedirect()">Start game</a>
         </div>
 </body>
 </html>
