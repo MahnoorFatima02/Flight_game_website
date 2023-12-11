@@ -60,12 +60,12 @@ body {
   .column1 {
     box-sizing: border-box;
     margin-top: 80px;
-      margin-left: 80px;
+      margin-left: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 750px;
-    height:500px;
+    width: 825px;
+    height:550px;
   }
 
   .column1 img {
@@ -78,7 +78,7 @@ body {
   .right-column {
     display: flex;
     flex-direction: column;
-    margin-left: 20px; /* Adjust the margin as needed */
+    margin-right: 100px; /* Adjust the margin as needed */
 
   }
 
@@ -124,6 +124,15 @@ background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
     height: 50px;
 
   }
+   .middle-button-container{
+       flex: 1;
+   }
+   .middle-button {
+       font-family: TechnoRaceItalic-font;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
 
   /* Add this style to increase the size of the submit button */
   .right-section button {
@@ -132,6 +141,53 @@ background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
     font-size: 20px;
     cursor: pointer;
   }
+
+  dialog[closed] {
+  position: fixed;
+  transition: all 0.5s ease-in-out;
+  opacity: 0;
+  display: block;
+}
+
+dialog[open] {
+  opacity: 1;
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.8);
+}
+
+dialog span {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  font-size: 2rem;
+  text-decoration: none;
+  color: #fff;
+  filter: drop-shadow(2px 2px 2px #000);
+}
+.goToHome {
+    align-self: center;
+    font-size: 1em;
+    margin-top: 100px;
+    cursor: pointer;
+}
+
+.back-button {
+    align-self: center;
+    display: inline-block; /* Ensures the link behaves like a block-level element */
+    background-color: #4CAF50; /* Green background color */
+    color: #fff; /* White text color */
+    padding: 25px 30px; /* Increased padding for a larger button */
+    border-radius: 10px; /* Rounded corners */
+    cursor: pointer; /* Cursor style on hover */
+    font-size: 25px; /* Increased text size */
+    font-family: TechnoRaceItalic-font;
+    text-decoration: none !important; /* Remove underline with !important to override default styles */
+}
+
+.back-button:hover {
+    background-color: #45a049; /* Darker green on hover */
 
 
   @media (max-width: 768px) {

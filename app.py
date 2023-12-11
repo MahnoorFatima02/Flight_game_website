@@ -110,12 +110,7 @@ def get_airport_status_without_printing(airport):
         query = ("SELECT name, people, fuel_price, probability FROM airport WHERE name = %s")
         cursor.execute(query, (airport_name,))
         result = cursor.fetchone()
-        status = {}
-        status["name"] = result[0]
-        status["people"] = result[1]
-        status["fuel_price"] = result[2]
-        status["probability"] = result[3]
-        return status
+        return result
 
     except mysql.connector.Error as err:
         print("Error: {}".format(err))
@@ -200,6 +195,26 @@ def player_status():
     username = data.get('username')
     result = get_status(username)
     return result
+@app.route('/refresh', methods=['POST'])
+def refresh():
+    data = request.get_json()
+    username = data.get('username')
+
+    result = get_status_without_printing(username)
+    money = int(result[0])
+    money = money - 500
+    try:
+        cursor = conn.cursor()
+        update_query = "UPDATE game SET money = %s WHERE username = %s"
+        cursor.execute(update_query, (money, username))
+        conn.commit()
+        result = get_status(username)
+        return result
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
+
+
 @app.route('/buyfuel', methods=['POST'])
 def buy_fuel():
     data = request.get_json()
@@ -229,8 +244,8 @@ def buy_fuel():
         return None
 @app.route('/fetchcountries', methods=['GET'])
 def get_countries():
-    countries = select_three_random_countries()
-    return jsonify({'countries': countries})
+    countrylist = select_three_random_countries()
+    return jsonify({"countries": countrylist})
 @app.route('/country-airports', methods=['GET'])
 def display_airports():
     country = request.headers['country']
@@ -246,15 +261,19 @@ def travel():
     destination = get_coordinate_by_name(airport_name)
     departure = get_coordinate_by_ident(username)
     dist = int(distance(destination,departure))
+    airport_status = get_airport_status_without_printing(airport)
+    people = airport_status[1]
     status = get_status_without_printing(username)
+    current_money = int(status[0])
+    money = current_money + people*100
     efficiency = float(status[4])
     current_fuel = int(status[1])
     fuel_needed = int(dist/efficiency)
     fuel_left = int(current_fuel - fuel_needed)
     try:
         cursor = conn.cursor()
-        update_query = "UPDATE game SET fuel = %s, location = (select distinct ident from airport where name = %s), people_saved = people_saved + (select distinct people from airport where name = %s), municipality_visited = municipality_visited + 1 WHERE username = %s"
-        cursor.execute(update_query, (fuel_left, airport_name, airport_name, username))
+        update_query = "UPDATE game SET fuel = %s, money = %s, location = (select distinct ident from airport where name = %s), people_saved = people_saved + (select distinct people from airport where name = %s), municipality_visited = municipality_visited + 1 WHERE username = %s"
+        cursor.execute(update_query, (fuel_left, money, airport_name, airport_name, username))
         conn.commit()
         result = get_status(username)
         return result
@@ -262,7 +281,7 @@ def travel():
         print("Error: {}".format(err))
         return None
 @app.route('/airportStatus', methods=['GET'])
-def get_airport_status_without_printing():
+def get_airport_status():
     try:
         airport = request.headers['airport']
         cursor = conn.cursor()

@@ -1,5 +1,15 @@
 'use strict';
 let username = localStorage.getItem('loggedInUsername');
+function playSoundAndRedirect() {
+    var audio = document.getElementById('buttonClickSound');
+    var redirectUrl = "/"; // Replace with your desired URL
+    audio.play();
+    setTimeout(function () {
+      window.location.href = redirectUrl;
+    }, audio.duration * 500);}
+function playSound() {
+    var audio = document.getElementById('buttonClickSound');
+    audio.play();}
 function initializeMap() {
   var map = L.map('map').setView([60, 24], 3);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -24,15 +34,16 @@ function createRedMarker(latitude, longitude) {
     marker.bindPopup("You are here");
     marker.addTo(markerGroup);
 }
-function openModal(largeImagePath) {
-            modalImage.src = largeImagePath;
-            dialog.showModal();
-        }
-function closeModal() {
-            dialog.close();
-        }
-const dialog = document.querySelector('dialog');
-const modalImage = document.getElementById('modal-image');
+const dialog1 = document.getElementById('dialog1');
+const dialog2 = document.getElementById('dialog2');
+function openModal1() {
+            dialog1.showModal();}
+function openModal2() {
+            dialog2.showModal();}
+function closeModal1() {
+            dialog1.close();}
+function closeModal2() {
+            dialog2.close();}
 function clearData() {
   let fuelinfo = document.getElementById("fuelinfo");
   fuelinfo.innerHTML = '';
@@ -78,7 +89,26 @@ async function fetchStatus() {
         alert("Status update failed.");
     }
 }
+async function refreshCountry(){
+    playSound();
+    const response = await fetch('/refresh', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username}),
+    });
+    const data = await response.json();
+    if (data) {
+        let money = document.getElementById("money");
+        money.textContent = data.money-500;
+        fetchCountries();}
+     else {
+        alert("Refresh failed");}
+}
+
 async function submitUserInput() {
+    playSound();
     let amount = document.getElementById("userInput").value;
     const response = await fetch('/buyfuel', {
         method: 'POST',
@@ -111,6 +141,7 @@ async function submitUserInput() {
     }
 }
 async function fetchCountries() {
+  clearData2();
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
   headers.append('Access-Control-Allow-Origin', '*');
@@ -122,7 +153,6 @@ async function fetchCountries() {
   const response = await fetch('/fetchcountries', options); // starts the download.
   const data = await response.json();
   console.log(data["countries"]);
-  clearData2()
   let question = document.getElementById("question");
   let questionParagraph = document.createElement("p");
   questionParagraph.textContent = "Location of countries are not displayed on the map ";
@@ -134,10 +164,12 @@ async function fetchCountries() {
   question.appendChild(questionParagraph2);
   question.appendChild(questionParagraph3);
   let questionList = document.createElement("ul");
-  data["countries"].forEach((country) => {
+  let list = data["countries"];
+  list.forEach((country) => {
     let questionOption = document.createElement("li");
     questionOption.textContent = country;
     questionOption.addEventListener("click", function (evt) {
+      playSound();
       fetchAirports(questionOption.textContent);
     });
     questionList.appendChild(questionOption);
@@ -176,6 +208,7 @@ async function fetchAirports(country) {
     airportList.appendChild(airportOption);
 
     airportOption.addEventListener("click", function (evt) {
+      playSound();
       travel(airportOption.textContent);
     });
   });
@@ -226,7 +259,7 @@ async function fetchAirportStatus(airportname) {
   let fuel_price = document.createElement("li");
   fuel_price.textContent = "Fuel price here is:" + data.fuel_price;
   let probability = document.createElement("li");
-  probability.textContent = "Probability: "  + data.probability;
+  probability.textContent = "You have earned "  + data.people*100 + " money";
   statusList.appendChild(name);
   statusList.appendChild(people);
   statusList.appendChild(fuel_price);
@@ -236,14 +269,14 @@ async function fetchAirportStatus(airportname) {
   setTimeout(() => {
     if (parseInt(fuel.textContent) < 0 || parseInt(peopleSaved.textContent) > 150) {
       console.log("GAME OVER");
-      alert("GAME OVER!");
+      openModal1();
     } else if (parseInt(peopleSaved.textContent) >= 100 && parseInt(placesVisited.textContent) >= 5) {
       console.log("Congratulations! You've won the game.");
-      alert("YOU WON!");
+      openModal2();
     } else {
       fetchCountries();
     }
-  }, 6000);
+  }, 1000);
 }
 
 fetchStatus();

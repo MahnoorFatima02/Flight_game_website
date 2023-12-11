@@ -63,7 +63,6 @@ body {
 }
 
 .back-button {
-    margin-right: 40px;
     display: inline-block; /* Ensures the link behaves like a block-level element */
     background-color: #4CAF50; /* Green background color */
     color: #fff; /* White text color */

@@ -12,6 +12,11 @@
      crossorigin=""></script>
 </head>
 <body>
+<audio id="backgroundMusic" loop autoplay>
+    <source src="../static/backgroundmusic.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+</audio>
+<audio id="buttonClickSound" src="../static/button.mp3" preload="auto"></audio>
   <div class="container">
     <div class="column">
       <img src="../static/pilot.png" alt="Image 1" class="icon">
@@ -69,7 +74,9 @@
     <div class="column right-column">
       <div class="right-section" id="question">
       </div>
-
+      <div class="middle-button-container">
+   <button class="middle-button" onclick="refreshCountry()">Spend 500 money to refresh countries</button>
+      </div>
       <div class="right-section button-section">
         <input type="text" id="userInput" placeholder="Buy Fuel">
         <button onclick="submitUserInput()">Submit</button>
@@ -82,11 +89,18 @@
       </div>
     </div>
   </div>
+<div class="goToHome">
+        <a class="back-button" onclick="playSoundAndRedirect()">Safe & Exit</a>
+        </div>
 <!--<div id="map"></div>-->
-<script src = "../static/main_page.js"> </script>
-<dialog>
-        <span class="close-modal" onclick="closeModal()">&#x2715;</span>
-        <img id="modal-image" alt="Large Image">
+<dialog id="dialog1">
+        <span class="close-modal" onclick="closeModal1()">&#x2715;</span>
+        <img id="modal-image" alt="Large Image" src="../static/gameover.png">
     </dialog>
+<dialog id="dialog2">
+        <span class="close-modal" onclick="closeModal2()">&#x2715;</span>
+        <img id="modal-image" alt="Large Image" src="../static/winner.png">
+    </dialog>
+<script src = "../static/main_page.js"> </script>
 </body>
 </html>
