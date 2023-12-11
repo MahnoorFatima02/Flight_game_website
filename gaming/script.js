@@ -37,6 +37,7 @@ async function fetchAirports(country) {
     airportOption.addEventListener("click", function (evt) {
       travel(airportOption.textContent)
       fetchAirportStatus(airportOption.textContent)
+
     })
   });
   airportChoices.appendChild(airportList)
@@ -179,18 +180,26 @@ async function fetchAirportStatus(airport) {
   statusList.appendChild(probability)
   airportStatus.appendChild(statusList)
 
-  setTimeout(() => {
+  setTimeout(async () => {
     if (parseInt(fuel.textContent) < 0 || parseInt(peopleSaved.textContent) > 150) {
       console.log("GAME OVER")
       alert("GAME OVER!")
-    } else if (parseInt(peopleSaved.textContent) >= 100 && parseInt(placesVisited.textContent) >= 5) {
+    } else if (parseInt(peopleSaved.textContent) <= 150 && parseInt(placesVisited.textContent) >= 5) {
       console.log("Congratulations! You've won the game.")
       alert("YOU WON!")
     } else {
-      clearData()
-      fetchCountries(map)
+      const data = await blessAirport(airport)
+      console.log(data)
+      if (data.probability >= 11 && data.probability <= 20) {
+        clearData()
+        createBlessAirportElements()
+      } else {
+        clearData()
+        fetchCountries(map)
+      }
+
     }
-  }, "10000");
+  }, "5000");
 
 }
 
@@ -218,6 +227,75 @@ async function startOver() {
   updateStatus(data)
 }
 
+async function blessAirport(airport) {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  headers.append('Access-Control-Allow-Origin', '*');
+  headers.append('username', 'u');
+  const options = {
+    method: 'GET',
+    headers: headers
+  };
+
+  const response = await fetch('http://127.0.0.1:5000/airportStatus/'+airport, options);
+  return await response.json();
+}
+function createBlessAirportElements(airport) {
+  let airportStatus = document.getElementById("question")
+  let statusParagraph = document.createElement("p")
+  statusParagraph.textContent = "You have entered the Blessed Aiport. Choose 1 option "
+  airportStatus.appendChild(statusParagraph)
+  const button1 = document.createElement('button');
+  button1.innerHTML = '1. Gain 2000 money';
+  button1.addEventListener("click", function (evt) {
+    handleOption1()
+  })
+
+  const button2 = document.createElement('button');
+  button2.innerHTML = '2. Increase fuel efficiency by 0.2';
+  button2.addEventListener("click", function (evt) {
+    handleOption2()
+  })
+
+  airportStatus.appendChild(button1)
+  airportStatus.appendChild(button2)
+ }
+
+
+async function handleOption1() {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  headers.append('Access-Control-Allow-Origin', '*');
+  headers.append('username', 'u');
+  const options = {
+    method: 'GET',
+    headers: headers
+  };
+  const response = await fetch('http://127.0.0.1:5000/handlefunction-1', options);
+  const data = await response.json();
+  updateStatus(data)
+  clearData()
+  fetchCountries(map)
+}
+
+async function handleOption2() {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  headers.append('Access-Control-Allow-Origin', '*');
+  headers.append('username', 'u');
+  const options = {
+    method: 'GET',
+    headers: headers
+  };
+
+  const response = await fetch('http://127.0.0.1:5000/handlefunction-2', options);
+  const data = await response.json();
+  updateStatus(data)
+  clearData()
+  fetchCountries(map)
+}
+
+
 async function main(){
   await fetchStatus()
   if (parseInt(fuel.textContent) < 0 || parseInt(peopleSaved.textContent) > 150) {
@@ -227,7 +305,7 @@ async function main(){
       clearData()
       fetchCountries(map)
     }
-  } else if (parseInt(peopleSaved.textContent) >= 100 && parseInt(placesVisited.textContent) >= 5) {
+  } else if (parseInt(peopleSaved.textContent) <= 150 && parseInt(placesVisited.textContent) >= 5) {
     console.log("Congratulations! You've won the game.")
     alert("YOU WON!")
   } else {
