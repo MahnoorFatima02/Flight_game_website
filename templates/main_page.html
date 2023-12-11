@@ -17,8 +17,8 @@
     <div class="column">
       <img src="../static/pilot.png" alt="Image 1" class="icon">
       <div class="info">
-      <p>Pilot:</p>
-      <p id = "user" >Text for Image 1</p>
+      <p id = "player">Pilot:</p>
+      <p id = "currentlocation" >Text for Image 1</p>
         </div>
     </div>
 
@@ -76,6 +76,12 @@
       <div class="right-section button-section">
         <input type="text" id="userInput" placeholder="Buy Fuel">
         <button onclick="submitUserInput()">Submit</button>
+        <div class = "fuel">
+        <p>Currently, 1 money can buy </p>
+        <p id="currentprice"></p>
+        <p>gas</p>
+          </div>
+        <p id="fuelinfo"></p>
       </div>
     </div>
   </div>
