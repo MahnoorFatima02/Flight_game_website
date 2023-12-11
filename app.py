@@ -15,159 +15,6 @@ conn = mysql.connector.connect(
     password='database123',
     autocommit=True
 )
-@app.route('/')
-def gamewebsite():
-    return render_template('game_website.html')
-@app.route('/loginpage')
-def loginpage():
-    return render_template('login.html')
-@app.route('/story')
-def story():
-    return render_template('story.html')
-@app.route('/mainpage')
-def mainpage():
-    return render_template('main_page.html')
-@app.route('/loginpage/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-
-    try:
-        cursor = conn.cursor()
-        select_query = "SELECT * FROM game WHERE username = %s AND password = %s"
-        cursor.execute(select_query, (username, password))
-        if cursor.fetchone() is not None:
-            response = jsonify({'success': True})
-            return response
-        else:
-            response = jsonify({'success': False})
-            return response
-        cursor.close()
-    except mysql.connector.Error as err:
-        response = jsonify({'success': False})
-        return response
-@app.route('/loginpage/register', methods=['POST'])
-def register():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-
-    try:
-        cursor = conn.cursor()
-        select_query = "SELECT * FROM game WHERE username = %s"
-        cursor.execute(select_query, (username,))
-        if cursor.fetchone() is not None:
-            response = jsonify({'success': False})
-            return response
-        else:
-            try:
-                cursor = conn.cursor()
-                insert_query = "INSERT INTO game (username, password, money, fuel, people_saved, municipality_visited, fuel_efficiency, location) VALUES (%s, %s, 3000, 1000, 0, 0, 0.8, 'EFHK')"
-                cursor.execute(insert_query, (username, password))
-                conn.commit()
-                cursor.close()
-                response = jsonify({'success': True})
-                return response
-            except mysql.connector.Error as err:
-                response = jsonify({'success': False})
-                return response
-    except mysql.connector.Error as err:
-        response = jsonify({'success': False})
-        return response
-@app.route('/airportStatus/<airport>', methods=['GET'])
-def get_airport_status_without_printing(airport):
-    try:
-        cursor = conn.cursor()
-        airport_name = unquote_plus(airport)
-        query = ("SELECT name, people, fuel_price, probability FROM airport WHERE name = %s")
-        cursor.execute(query, (airport_name))
-        result = cursor.fetchone()
-        status = {}
-        status["name"] = result[0]
-        status["people"] = result[1]
-        status["fuel_price"] = result[2]
-        status["probability"] = result[3]
-        return status
-
-    except mysql.connector.Error as err:
-        print("Error: {}".format(err))
-        return None
-@app.route('/buyfuel/<amount>', methods=['GET'])
-def buy_fuel(amount):
-    username = request.headers['username']
-    result = get_status_without_printing(username)
-    money = result[0]
-    fuel = result[1]
-    fuel_price = result[6]
-    spending = int(amount)
-    if money >= spending:
-        fuel += spending * fuel_price
-        money -= spending
-        print(f"Your total fuel now is {fuel}, and you have {money} money left.")
-    else:
-        print("You don't have enough money to buy fuel.")
-    try:
-        cursor = conn.cursor()
-        update_query = "UPDATE game SET money = %s, fuel = %s WHERE username = %s"
-        cursor.execute(update_query, (money, fuel, username))
-        conn.commit()
-        result = get_status(username)
-        return result
-    except mysql.connector.Error as err:
-        print("Error: {}".format(err))
-        return None
-@app.route('/status', methods=['GET'])
-def game_status():
-    username = request.headers['username']
-    result = get_status(username)
-    return result
-
-@app.route('/start-over', methods=['GET'])
-def start_over():
-    username = request.headers['username']
-    try:
-        cursor = conn.cursor()
-        update_query = "Update game set fuel = 1000, money = 3000, people_saved=0, municipality_visited=0, location='EFHK' where username = %s"
-        cursor.execute(update_query, (username))
-        conn.commit()
-        result = get_status(username)
-        return result
-    except mysql.connector.Error as err:
-        print("Error: {}".format(err))
-        return None
-@app.route('/travel/<airport>', methods=['GET'])
-def travel(airport):
-    username = request.headers['username']
-    airport_name = unquote_plus(airport)
-    destination = get_coordinate_by_name(airport_name)
-    departure = get_coordinate_by_ident(username)
-    dist = int(distance(destination,departure))
-    status = get_status_without_printing(username)
-    efficiency = status[4]
-    current_fuel = status[1]
-    fuel_needed = dist/efficiency
-    fuel_left = current_fuel - fuel_needed
-    try:
-        cursor = conn.cursor()
-        update_query = "UPDATE game SET fuel = %s, location = (select distinct ident from airport where name = %s), people_saved = people_saved + (select distinct people from airport where name = %s), municipality_visited = municipality_visited + 1 WHERE username = %s"
-        cursor.execute(update_query, (fuel_left, airport_name, airport_name, username))
-        conn.commit()
-        result = get_status(username)
-        return result
-    except mysql.connector.Error as err:
-        print("Error: {}".format(err))
-        return None
-@app.route('/countries', methods=['GET'])
-def get_countries():
-    while True:
-        countries = select_three_random_countries()
-        return jsonify({'countries': countries})
-@app.route('/country-airports/<country>', methods=['GET'])
-def user_choose_airport(country):
-    c = country
-    response = select_five_random_airports(c)
-    return jsonify({'airports': response})
 def distance(a,b):
     dist = geodesic(a, b).kilometers
     return dist
@@ -250,6 +97,160 @@ def select_three_random_countries():
     except mysql.connector.Error as err:
         print("Error: {}".format(err))
         return None
+@app.route('/')
+def gamewebsite():
+    return render_template('game_website.html')
+@app.route('/loginpage')
+def loginpage():
+    return render_template('login.html')
+@app.route('/story')
+def story():
+    return render_template('story.html')
+@app.route('/mainpage')
+def mainpage():
+    return render_template('main_page.html')
+@app.route('/loginpage/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    try:
+        cursor = conn.cursor()
+        select_query = "SELECT * FROM game WHERE username = %s AND password = %s"
+        cursor.execute(select_query, (username, password))
+        if cursor.fetchone() is not None:
+            response = jsonify({'success': True})
+            return response
+        else:
+            response = jsonify({'success': False})
+            return response
+        cursor.close()
+    except mysql.connector.Error as err:
+        response = jsonify({'success': False})
+        return response
+@app.route('/loginpage/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    try:
+        cursor = conn.cursor()
+        select_query = "SELECT * FROM game WHERE username = %s"
+        cursor.execute(select_query, (username,))
+        if cursor.fetchone() is not None:
+            response = jsonify({'success': False})
+            return response
+        else:
+            try:
+                cursor = conn.cursor()
+                insert_query = "INSERT INTO game (username, password, money, fuel, people_saved, municipality_visited, fuel_efficiency, location) VALUES (%s, %s, 3000, 1000, 0, 0, 0.8, 'EFHK')"
+                cursor.execute(insert_query, (username, password))
+                conn.commit()
+                cursor.close()
+                response = jsonify({'success': True})
+                return response
+            except mysql.connector.Error as err:
+                response = jsonify({'success': False})
+                return response
+    except mysql.connector.Error as err:
+        response = jsonify({'success': False})
+        return response
+@app.route('/airportStatus/<airport>', methods=['GET'])
+def get_airport_status_without_printing(airport):
+    try:
+        cursor = conn.cursor()
+        airport_name = unquote_plus(airport)
+        query = ("SELECT name, people, fuel_price, probability FROM airport WHERE name = %s")
+        cursor.execute(query, (airport_name,))
+        result = cursor.fetchone()
+        status = {}
+        status["name"] = result[0]
+        status["people"] = result[1]
+        status["fuel_price"] = result[2]
+        status["probability"] = result[3]
+        return status
+
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
+@app.route('/buyfuel/<amount>', methods=['GET'])
+def buy_fuel(amount):
+    username = request.headers['username']
+    result = get_status_without_printing(username)
+    money = result[0]
+    fuel = result[1]
+    fuel_price = result[6]
+    spending = int(amount)
+    if money >= spending:
+        fuel += spending * fuel_price
+        money -= spending
+        print(f"Your total fuel now is {fuel}, and you have {money} money left.")
+    else:
+        print("You don't have enough money to buy fuel.")
+    try:
+        cursor = conn.cursor()
+        update_query = "UPDATE game SET money = %s, fuel = %s WHERE username = %s"
+        cursor.execute(update_query, (money, fuel, username))
+        conn.commit()
+        result = get_status(username)
+        return result
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
+@app.route('/status', methods=['GET'])
+def game_status():
+    username = request.headers['username']
+    result = get_status(username)
+    return result
+
+@app.route('/start-over', methods=['GET'])
+def start_over():
+    username = request.headers['username']
+    try:
+        cursor = conn.cursor()
+        update_query = "Update game set fuel = 1000, money = 3000, people_saved=0, municipality_visited=0, location='EFHK' where username = %s"
+        cursor.execute(update_query, (username,))
+        conn.commit()
+        result = get_status(username)
+        return result
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
+@app.route('/travel/<airport>', methods=['GET'])
+def travel(airport):
+    username = request.headers['username']
+    airport_name = unquote_plus(airport)
+    destination = get_coordinate_by_name(airport_name)
+    departure = get_coordinate_by_ident(username)
+    dist = int(distance(destination,departure))
+    status = get_status_without_printing(username)
+    efficiency = status[4]
+    current_fuel = status[1]
+    fuel_needed = dist/efficiency
+    fuel_left = current_fuel - fuel_needed
+    try:
+        cursor = conn.cursor()
+        update_query = "UPDATE game SET fuel = %s, location = (select distinct ident from airport where name = %s), people_saved = people_saved + (select distinct people from airport where name = %s), municipality_visited = municipality_visited + 1 WHERE username = %s"
+        cursor.execute(update_query, (fuel_left, airport_name, airport_name, username))
+        conn.commit()
+        result = get_status(username)
+        return result
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
+@app.route('/countries', methods=['GET'])
+def get_countries():
+    while True:
+        countries = select_three_random_countries()
+        return jsonify({'countries': countries})
+@app.route('/country-airports/<country>', methods=['GET'])
+def user_choose_airport(country):
+    c = country
+    response = select_five_random_airports(c)
+    return jsonify({'airports': response})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
