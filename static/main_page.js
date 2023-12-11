@@ -6,7 +6,6 @@ function initializeMap() {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 20
   }).addTo(map);
-  L.marker([60, 24]).addTo(map);
   return map;
 }
 let map = initializeMap();
@@ -14,7 +13,17 @@ let markerGroup = L.layerGroup().addTo(map);
 function removeAllMarkers() {
     markerGroup.clearLayers();
 }
-
+function createRedMarker(latitude, longitude) {
+    let redIcon = L.icon({
+        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+    });
+    let marker = L.marker([latitude, longitude], { icon: redIcon });
+    marker.bindPopup("You are here");
+    marker.addTo(markerGroup);
+}
 function openModal(largeImagePath) {
             modalImage.src = largeImagePath;
             dialog.showModal();
@@ -50,6 +59,7 @@ function updateStatus(data) {
   fuel.textContent = data.fuel;
   let currentprice = document.getElementById("currentprice");
   currentprice.textContent = data.fuel_price;
+  createRedMarker(data.lat,data.long);
 }
 async function fetchStatus() {
   const response = await fetch('/status', {
@@ -233,8 +243,8 @@ async function fetchAirportStatus(airportname) {
     } else {
       fetchCountries();
     }
-  }, 8000);
+  }, 6000);
 }
 
 fetchStatus();
-fetchCountries()
+fetchCountries();

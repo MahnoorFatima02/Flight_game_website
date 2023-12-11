@@ -64,7 +64,7 @@ def select_five_random_airports(country_name):
 def get_status(username):
     try:
         cursor = conn.cursor()
-        query = "SELECT money, fuel, people_saved, municipality_visited, fuel_efficiency, airport.name, fuel_price, country.name, username FROM game, airport, country WHERE location = ident and airport.iso_country=country.iso_country and username = %s"
+        query = "SELECT money, fuel, people_saved, municipality_visited, fuel_efficiency, airport.name, fuel_price, country.name, username, latitude_deg, longitude_deg FROM game, airport, country WHERE location = ident and airport.iso_country=country.iso_country and username = %s"
         cursor.execute(query, (username,))
         result = cursor.fetchone()
         status = {}
@@ -76,6 +76,8 @@ def get_status(username):
         status["fuel_price"] = result[6]
         status["player"] = result[8]
         status["currentlocation"] = result[7]
+        status["lat"] = result[9]
+        status["long"] = result[10]
         return status
     except mysql.connector.Error as err:
         print("Error: {}".format(err))
