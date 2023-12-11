@@ -1,6 +1,10 @@
-
+@font-face {
+    font-family: TechnoRaceItalic-font;
+    src: url('TechnoRaceItalic-eZRWe.otf') format('truetype');
+}
 
 body {
+    font-family: TechnoRaceItalic-font
     margin: 0;
     font-family: Arial, sans-serif;
     background-image: url("../static/game_background.jpg");
@@ -12,11 +16,11 @@ body {
   }
 
   .container {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 10px;
-    background-color: bisque;
-     font-size: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
+      font-size: 10px;
   }
 
   .column {
@@ -26,19 +30,20 @@ body {
     display: flex;
     align-items: center;
   }
-
+.info {
+    flex-direction: column;
+}
   .column img {
-    width: 40%;
+    width: 80px;
     display: block;
-    height: 50px;
+    height: auto;
+    margin: 10px 10px 10px 10px; /* Add margin to create space around the images */
   }
 
   .column p {
-    position: static;
-    top: 50%;
-    right: 100%;
-    transform: translateY(-50%);
-    margin-left: 10px;
+  margin-left: 10px;
+  font-size: 20px; /* Adjust the font size as needed */
+  font-family: TechnoRaceItalic-font
   }
 
 
@@ -54,14 +59,13 @@ body {
 
   .column1 {
     box-sizing: border-box;
-    margin: 50px 10px;
+    margin-top: 80px;
+      margin-left: 80px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 600px;
-    height:400px;
-
-
+    width: 750px;
+    height:500px;
   }
 
   .column1 img {
@@ -90,7 +94,7 @@ body {
     padding: 10px;
     padding-bottom: 10px;
     box-sizing: border-box;
-
+background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
 
   }
 
@@ -102,6 +106,7 @@ body {
     border: 3px solid #000; /* You can change the color by specifying a different color code or name */
 
     box-sizing: border-box;
+       background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
    }
 
    .right-section input[type="text"] {
@@ -109,15 +114,16 @@ body {
     padding: 10px;
     box-sizing: border-box;
     margin-bottom: 10px;
-   font-size: 10px;
-    height: 30px;
+   font-size: 18px;
+    height: 50px;
 
   }
 
   /* Add this style to increase the size of the submit button */
   .right-section button {
+      font-family: TechnoRaceItalic-font;
     padding: 10px;
-    font-size: 8px;
+    font-size: 20px;
     cursor: pointer;
   }
 

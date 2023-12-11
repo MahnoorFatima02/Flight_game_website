@@ -15,36 +15,51 @@
 
   <div class="container">
     <div class="column">
-      <img src="../static/people4.jpg" alt="Image 1">
+      <img src="../static/pilot.png" alt="Image 1" class="icon">
+      <div class="info">
+      <p>Pilot:</p>
       <p id = "user" >Text for Image 1</p>
+        </div>
     </div>
 
     <div class="column">
-      <img src="../static/money.jpg" alt="Image 2">
+      <img src="../static/money.png" alt="Image 2" class="icon">
+      <div class="info">
+      <p>Money:</p>
       <p id = "money" >3000</p>
+        </div>
     </div>
 
     <div class="column">
-      <img src="../static/player.jpg" alt="Image 3">
-        <p>People saved</p>
+      <img src="../static/peoplesaved.png" alt="Image 3">
+      <div class="info">
+        <p>People saved:</p>
       <p id = "peopleSaved" >0</p>
+        </div>
     </div>
 
     <div class="column">
-      <img src="../static/fuel3.jpg" alt="Image 4">
+      <img src="../static/fuelefficiency.png" alt="Image 4">
+      <div class="info">
+      <p>Fuel Efficiency:</p>
       <p id = "fuelEfficiency">0.8</p>
+        </div>
     </div>
 
     <div class="column">
-      <img src="../static/fuel3.jpg" alt="Image 5">
-        <p>Places Visited</p>
+      <img src="../static/placesvisited.png" alt="Image 5">
+      <div class="info">
+        <p>Places Visited:</p>
       <p id = "placesVisited">0</p>
+        </div>
     </div>
 
     <div class="column">
-        <img src="../static/player.jpg" alt="Image 5">
-        <p>Fuel</p>
+        <img src="../static/fuel.png" alt="Image 5">
+      <div class="info">
+        <p>Fuel:</p>
         <p id = "fuel">1000</p>
+      </div>
     </div>
 
   </div>
@@ -67,5 +82,9 @@
 
 <!--<div id="map"></div>-->
 <script src = "../static/main_page.js"> </script>
+<dialog>
+        <span class="close-modal" onclick="closeModal()">&#x2715;</span>
+        <img id="modal-image" alt="Large Image">
+    </dialog>
 </body>
 </html>

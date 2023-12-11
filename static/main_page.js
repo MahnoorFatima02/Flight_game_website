@@ -4,6 +4,15 @@ let username = localStorage.getItem('loggedInUsername');
 // Global variables
 let map = initializeMap();
 
+function openModal(largeImagePath) {
+            modalImage.src = largeImagePath;
+            dialog.showModal();
+        }
+function closeModal() {
+            dialog.close();
+        }
+const dialog = document.querySelector('dialog');
+const modalImage = document.getElementById('modal-image');
 function clearData() {
   let question = document.getElementById("question");
   question.innerHTML = '';
