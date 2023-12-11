@@ -1,3 +1,4 @@
+let loggedInUsername; // Variable to store the logged-in username
 async function login() {
     var audio = document.getElementById('buttonClickSound');
     audio.play();
@@ -16,7 +17,9 @@ async function login() {
 
     if (result.success) {
         alert("Login successful");
-        window.location.href = '/mainpage'
+        loggedInUsername = username; // Save the username
+        localStorage.setItem('loggedInUsername', loggedInUsername);
+        window.location.href = '/mainpage';
     } else {
         alert("Login failed. Check your credentials.");
     }
@@ -40,7 +43,9 @@ async function register() {
 
     if (result.success) {
         alert("Registration successful");
-        window.location.href = '/mainpage'
+        loggedInUsername = username; // Save the username
+        localStorage.setItem('loggedInUsername', loggedInUsername);
+        window.location.href = '/mainpage';
     } else {
         alert("Registration failed. Username may already exist.");
     }
