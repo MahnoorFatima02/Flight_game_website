@@ -10,6 +10,10 @@ function initializeMap() {
   return map;
 }
 let map = initializeMap();
+let markerGroup = L.layerGroup().addTo(map);
+function removeAllMarkers() {
+    markerGroup.clearLayers();
+}
 
 function openModal(largeImagePath) {
             modalImage.src = largeImagePath;
@@ -152,9 +156,9 @@ async function fetchAirports(country) {
   airportChoices.appendChild(airportParagraph);
   airportChoices.appendChild(airportParagraph2);
   let airportList = document.createElement("ul");
-
+  removeAllMarkers();
   data["airports"].forEach((a) => {
-    L.marker([a.latitude, a.longitude]).addTo(map)
+    L.marker([a.latitude, a.longitude]).addTo(markerGroup)
     .bindPopup(`${a.airport} has ${a.people} people and fuel price of ${a.fuel_price}`);
 
     let airportOption = document.createElement("li");
