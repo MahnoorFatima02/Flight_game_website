@@ -187,7 +187,7 @@ def start_over():
     username = request.headers['username']
     try:
         cursor = mysql.get_db().cursor()
-        update_query = "Update game set fuel = 1000, money = 3000, people_saved=0, municipality_visited=0, location='EFHK' where username = %s"
+        update_query = "Update game set fuel = 5000, money = 3000, people_saved=0, municipality_visited=0, location='EFHK' where username = %s"
         cursor.execute(update_query, (username))
         mysql.get_db().commit()
         return get_status(username)
@@ -259,62 +259,47 @@ def user_choose_airport(country):
     response = select_five_random_airports(country)
     return jsonify({'airports': response})
 
+@app.route('/rob-airport/<airport>', methods=['GET'])
+def rob(airport):
+    airport_name = unquote_plus(airport)
+    airport_status = get_airport_status_without_printing(airport_name)
+    probability = airport_status[3]
+    return probability
 
-# def rob(connection, airport_name, username):
-#     airport_status = get_airport_status_without_printing(connection, airport_name)
-#     probability = airport_status[3]
-#
-#     if probability == 1 or probability == 10:
-#         print("You've entered an evil airport. You are about to be robbed!")
-#         time.sleep(1)
-#
-#         while True:
-#             print("Choose a debuff:")
-#             time.sleep(1)
-#             print("1. Lose half of your money")
-#             time.sleep(1)
-#             print("2. Decrease fuel efficiency by 0.2")
-#             time.sleep(1)
-#
-#             choice = input("Enter 1 or 2: ")
-#
-#             if choice == "1":
-#                 player_status = get_status_without_printing(connection, username)
-#                 money = player_status[0]
-#                 money /= 2
-#                 print(f"You've lost half of your money. Your new money value is {money}")
-#                 time.sleep(1)
-#                 try:
-#                     cursor = connection.cursor()
-#                     update_query = "UPDATE game SET money = %s WHERE username = %s"
-#                     cursor.execute(update_query, (money, username))
-#                     connection.commit()
-#                     cursor.close()
-#                 except mysql.connector.Error as err:
-#                     print("Error: {}".format(err))
-#                 get_status(connection, username)
-#
-#                 break
-#
-#             elif choice == "2":
-#                 player_status = get_status_without_printing(connection, username)
-#                 fuel_efficiency = player_status[4]
-#                 fuel_efficiency -= 0.2
-#                 print(f"Your fuel efficiency has decreased by 0.2. It's now {fuel_efficiency:.1f}")
-#                 time.sleep(1)
-#                 try:
-#                     cursor = connection.cursor()
-#                     update_query = "UPDATE game SET fuel_efficiency = %s WHERE username = %s"
-#                     cursor.execute(update_query, (fuel_efficiency, username))
-#                     connection.commit()
-#                     cursor.close()
-#                 except mysql.connector.Error as err:
-#                     print("Error: {}".format(err))
-#                 get_status(connection, username)
-#                 break
-#
-#             else:
-#                 print("Invalid choice. Please enter 1 or 2.")
+@app.route('/handleRobfunction-1', methods=['GET'])
+
+def handleRobfunction1():
+    username = request.headers['username']
+    player_status = get_status_without_printing(username)
+    money = player_status[0]
+    money /= 2
+    try:
+         cursor = mysql.get_db().cursor()
+         update_query = "UPDATE game SET money = %s WHERE username = %s"
+         cursor.execute(update_query, (money, username))
+         mysql.get_db().commit()
+         return get_status(username)
+
+    except Exception as err:
+        print("Error: {}".format(err))
+        return None
+
+@app.route('/handleRobfunction-2', methods=['GET'])
+def handleRobfunction2():
+    username = request.headers['username']
+    player_status = get_status_without_printing(username)
+    fuel_efficiency = player_status[4]
+    fuel_efficiency -= 0.2
+    try:
+        cursor = mysql.get_db().cursor()
+        update_query = "UPDATE game SET fuel_efficiency = %s WHERE username = %s"
+        cursor.execute(update_query, (fuel_efficiency, username))
+        mysql.get_db().commit()
+        return get_status(username)
+    except Exception as err:
+        print("Error: {}".format(err))
+        return None
+
 
 @app.route('/bless-airport/<airport>', methods=['GET'])
 def reward(airport):

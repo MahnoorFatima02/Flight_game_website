@@ -142,7 +142,7 @@ async function fetchStatus() {
     method: 'GET',
     headers: headers
   };
-  const response = await fetch('http://127.0.0.1:5000/status', options);              // starts the download.
+  const response = await fetch('http://127.0.0.1:5000/status', options);
   const data = await response.json();
   console.log(data)
   updateStatus(data)
@@ -193,6 +193,9 @@ async function fetchAirportStatus(airport) {
       if (data.probability >= 11 && data.probability <= 20) {
         clearData()
         createBlessAirportElements()
+      } else if (data.probability >= 1 && data.probability <= 10){
+        clearData()
+        createRobAirportElements()
       } else {
         clearData()
         fetchCountries(map)
@@ -294,6 +297,61 @@ async function handleOption2() {
   clearData()
   fetchCountries(map)
 }
+
+function createRobAirportElements(airport) {
+  let airportStatus = document.getElementById("question")
+  let statusParagraph = document.createElement("p")
+  statusParagraph.textContent = "You have entered the Rob Airport. Choose 1 option "
+  airportStatus.appendChild(statusParagraph)
+  const button1 = document.createElement('button');
+  button1.innerHTML = '1. Lose half of your money';
+  button1.addEventListener("click", function (evt) {
+    handleRobOption1()
+  })
+
+  const button2 = document.createElement('button');
+  button2.innerHTML = '2. Decrease fuel efficiency by 0.2';
+  button2.addEventListener("click", function (evt) {
+    handleRobOption2()
+  })
+
+  airportStatus.appendChild(button1)
+  airportStatus.appendChild(button2)
+ }
+
+async function handleRobOption1() {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  headers.append('Access-Control-Allow-Origin', '*');
+  headers.append('username', 'u');
+  const options = {
+    method: 'GET',
+    headers: headers
+  };
+  const response = await fetch('http://127.0.0.1:5000/handleRobfunction-1', options);
+  const data = await response.json();
+  updateStatus(data)
+  clearData()
+  fetchCountries(map)
+}
+
+async function handleRobOption2() {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  headers.append('Access-Control-Allow-Origin', '*');
+  headers.append('username', 'u');
+  const options = {
+    method: 'GET',
+    headers: headers
+  };
+
+  const response = await fetch('http://127.0.0.1:5000/handleRobfunction-2', options);
+  const data = await response.json();
+  updateStatus(data)
+  clearData()
+  fetchCountries(map)
+}
+
 
 
 async function main(){
