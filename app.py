@@ -317,8 +317,6 @@ def handlefunction1():
     except mysql.connector.Error as err:
         print("Error: {}".format(err))
         return None
-
-
 @app.route('/handlefunction2', methods=['POST'])
 def handlefunction2():
     data = request.get_json()
@@ -327,6 +325,42 @@ def handlefunction2():
     fuel_efficiency = player_status[4]
     fuel_efficiency += 0.2
     print(f"Your fuel efficiency has increased by 0.2. It's now {fuel_efficiency}")
+    try:
+        cursor = conn.cursor()
+        update_query = "UPDATE game SET fuel_efficiency = %s WHERE username = %s"
+        cursor.execute(update_query, (fuel_efficiency, username))
+        conn.commit()
+        result = get_status(username)
+        return result
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
+@app.route('/handlefunction3', methods=['POST'])
+def handlefunction3():
+    data = request.get_json()
+    username = data.get('username')
+    player_status = get_status_without_printing(username)
+    money = player_status[0]
+    money = money/2
+    print(f"Your money is half less now. Your new money value is {money}")
+    try:
+        cursor = conn.cursor()
+        update_query = "UPDATE game SET money = %s WHERE username = %s"
+        cursor.execute(update_query, (money, username))
+        conn.commit()
+        result = get_status(username)
+        return result
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
+@app.route('/handlefunction4', methods=['POST'])
+def handlefunction4():
+    data = request.get_json()
+    username = data.get('username')
+    player_status = get_status_without_printing(username)
+    fuel_efficiency = player_status[4]
+    fuel_efficiency -= 0.2
+    print(f"Your fuel efficiency has decreased by 0.2. It's now {fuel_efficiency}")
     try:
         cursor = conn.cursor()
         update_query = "UPDATE game SET fuel_efficiency = %s WHERE username = %s"

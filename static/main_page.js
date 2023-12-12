@@ -10,6 +10,24 @@ function playSoundAndRedirect() {
 function playSound() {
     var audio = document.getElementById('buttonClickSound');
     audio.play();}
+function playSoundbuy() {
+    var audio = document.getElementById('buy');
+    audio.play();}
+function playSoundbless() {
+    var audio = document.getElementById('bless');
+    audio.play();}
+function playSoundcurse() {
+    var audio = document.getElementById('curse');
+    audio.play();}
+function playSoundwin() {
+    var audio = document.getElementById('win');
+    audio.play();}
+function playSoundlose() {
+    var audio = document.getElementById('lose');
+    audio.play();}
+function playSoundfly() {
+    var audio = document.getElementById('fly');
+    audio.play();}
 function initializeMap() {
   var map = L.map('map').setView([60, 24], 3);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -107,7 +125,7 @@ async function refreshCountry(){
 }
 
 async function submitUserInput() {
-    playSound();
+    playSoundbuy();
     let amount = document.getElementById("userInput").value;
     const response = await fetch('/buyfuel', {
         method: 'POST',
@@ -162,18 +180,16 @@ async function fetchCountries() {
   question.appendChild(questionParagraph);
   question.appendChild(questionParagraph2);
   question.appendChild(questionParagraph3);
-  let questionList = document.createElement("ul");
   let list = data["countries"];
   list.forEach((country) => {
-    let questionOption = document.createElement("li");
+    let questionOption = document.createElement("button");
     questionOption.textContent = country;
     questionOption.addEventListener("click", function (evt) {
       playSound();
       fetchAirports(questionOption.textContent);
     });
-    questionList.appendChild(questionOption);
+    question.appendChild(questionOption);
   });
-  question.appendChild(questionList);
 }
 async function fetchAirports(country) {
   const headers = new Headers();
@@ -196,22 +212,20 @@ async function fetchAirports(country) {
   airportParagraph2.textContent = "(Check the map for info about people and fuel price) ";
   airportChoices.appendChild(airportParagraph);
   airportChoices.appendChild(airportParagraph2);
-  let airportList = document.createElement("ul");
   removeAllMarkers();
   data["airports"].forEach((a) => {
     L.marker([a.latitude, a.longitude]).addTo(markerGroup)
     .bindPopup(`${a.airport} has ${a.people} people and fuel price of ${a.fuel_price}`);
 
-    let airportOption = document.createElement("li");
+    let airportOption = document.createElement("button");
     airportOption.textContent = decodeURI(a.airport);
-    airportList.appendChild(airportOption);
+    airportChoices.appendChild(airportOption);
 
     airportOption.addEventListener("click", function (evt) {
-      playSound();
+      playSoundfly();
       travel(airportOption.textContent);
     });
   });
-  airportChoices.appendChild(airportList);
 }
 async function travel(airportName) {
     let airport_name = airportName;
@@ -268,39 +282,65 @@ async function fetchAirportStatus(airportname) {
   setTimeout(() => {
     if (parseInt(fuel.textContent) < 0 || parseInt(peopleSaved.textContent) > 150) {
       console.log("GAME OVER");
+      playSoundlose();
       openModal1();
     } else if (parseInt(peopleSaved.textContent) >= 100 && parseInt(placesVisited.textContent) >= 5) {
       console.log("Congratulations! You've won the game.");
+      playSoundwin();
       openModal2();
     } else {
-      let probability = data.probability;
+      let probability = parseInt(data.probability);
       console.log(probability);
-      if (probability > 15 ) {
+      if (probability < 6) {
+        createRobAirportElements();
+      } else if (probability > 15 ) {
         createBlessAirportElements();
       } else {
         fetchCountries();}
     }
-  }, 1000);
+  }, 5000);
 }
 function createBlessAirportElements() {
+    playSoundbless();
   let airportStatus = document.getElementById("question");
   let statusParagraph = document.createElement("p");
-  statusParagraph.textContent = "You have entered the Blessed Aiport. Choose 1 option ";
+  statusParagraph.textContent = "You have found a reward chest. Choose 1 option ";
   airportStatus.appendChild(statusParagraph);
   const button1 = document.createElement('button');
-  button1.innerHTML = '1. Gain 2000 money';
+  button1.innerHTML = 'Gain 2000 money';
   button1.addEventListener("click", function (evt) {
     handleOption1();
   })
 
   const button2 = document.createElement('button');
-  button2.innerHTML = '2. Increase fuel efficiency by 0.2';
+  button2.innerHTML = 'Increase fuel efficiency by 0.2';
   button2.addEventListener("click", function (evt) {
     handleOption2();
   })
 
-  airportStatus.appendChild(button1)
-  airportStatus.appendChild(button2)
+  airportStatus.appendChild(button1);
+  airportStatus.appendChild(button2);
+ }
+ function createRobAirportElements() {
+    playSoundcurse();
+  let airportStatus = document.getElementById("question");
+  let statusParagraph = document.createElement("p");
+  statusParagraph.textContent = "You have received a curse. Choose 1 option ";
+  airportStatus.appendChild(statusParagraph);
+  const button1 = document.createElement('button');
+  button1.innerHTML = 'Your money will be half less';
+  button1.addEventListener("click", function (evt) {
+    handleOption3();
+  })
+
+  const button2 = document.createElement('button');
+  button2.innerHTML = 'Decrease fuel efficiency by 0.2';
+  button2.addEventListener("click", function (evt) {
+    handleOption4();
+  })
+
+  airportStatus.appendChild(button1);
+  airportStatus.appendChild(button2);
  }
 async function handleOption1() {
     const response = await fetch('/handlefunction1', {
@@ -334,6 +374,37 @@ async function handleOption2() {
         console.log("Choice 2 failed.");
     }
 }
-
+async function handleOption3() {
+    const response = await fetch('/handlefunction3', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username}),
+    });
+    const data = await response.json();
+    if (data){
+        updateStatus(data);
+        fetchCountries();
+    } else {
+        console.log("Choice 3 failed.");
+    }
+}
+async function handleOption4() {
+    const response = await fetch('/handlefunction4', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username}),
+    });
+    const data = await response.json();
+    if (data){
+        updateStatus(data);
+        fetchCountries();
+    } else {
+        console.log("Choice 4 failed.");
+    }
+}
 fetchStatus();
 fetchCountries();
