@@ -100,8 +100,7 @@ async function refreshCountry(){
     });
     const data = await response.json();
     if (data) {
-        let money = document.getElementById("money");
-        money.textContent = data.money-500;
+        updateStatus(data);
         fetchCountries();}
      else {
         alert("Refresh failed");}
@@ -274,9 +273,66 @@ async function fetchAirportStatus(airportname) {
       console.log("Congratulations! You've won the game.");
       openModal2();
     } else {
-      fetchCountries();
+      let probability = data.probability;
+      console.log(probability);
+      if (probability > 15 ) {
+        createBlessAirportElements();
+      } else {
+        fetchCountries();}
     }
   }, 1000);
+}
+function createBlessAirportElements() {
+  let airportStatus = document.getElementById("question");
+  let statusParagraph = document.createElement("p");
+  statusParagraph.textContent = "You have entered the Blessed Aiport. Choose 1 option ";
+  airportStatus.appendChild(statusParagraph);
+  const button1 = document.createElement('button');
+  button1.innerHTML = '1. Gain 2000 money';
+  button1.addEventListener("click", function (evt) {
+    handleOption1();
+  })
+
+  const button2 = document.createElement('button');
+  button2.innerHTML = '2. Increase fuel efficiency by 0.2';
+  button2.addEventListener("click", function (evt) {
+    handleOption2();
+  })
+
+  airportStatus.appendChild(button1)
+  airportStatus.appendChild(button2)
+ }
+async function handleOption1() {
+    const response = await fetch('/handlefunction1', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username}),
+    });
+    const data = await response.json();
+    if (data){
+        updateStatus(data);
+        fetchCountries();
+    } else {
+        console.log("Choice 1 failed.");
+    }
+}
+async function handleOption2() {
+    const response = await fetch('/handlefunction2', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username}),
+    });
+    const data = await response.json();
+    if (data){
+        updateStatus(data);
+        fetchCountries();
+    } else {
+        console.log("Choice 2 failed.");
+    }
 }
 
 fetchStatus();

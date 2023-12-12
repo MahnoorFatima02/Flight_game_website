@@ -174,7 +174,7 @@ def register():
         else:
             try:
                 cursor = conn.cursor()
-                insert_query = "INSERT INTO game (username, password, money, fuel, people_saved, municipality_visited, fuel_efficiency, location) VALUES (%s, %s, 3000, 1000, 0, 0, 0.8, 'EFHK')"
+                insert_query = "INSERT INTO game (username, password, money, fuel, people_saved, municipality_visited, fuel_efficiency, location) VALUES (%s, %s, 2000, 3000, 0, 0, 0.8, 'EFHK')"
                 cursor.execute(insert_query, (username, password))
                 conn.commit()
                 cursor.close()
@@ -265,7 +265,7 @@ def travel():
     people = airport_status[1]
     status = get_status_without_printing(username)
     current_money = int(status[0])
-    money = current_money + people*100
+    money = current_money + people*50
     efficiency = float(status[4])
     current_fuel = int(status[1])
     fuel_needed = int(dist/efficiency)
@@ -299,5 +299,43 @@ def get_airport_status():
         print("Error: {}".format(err))
         return None
 
+@app.route('/handlefunction1', methods=['POST'])
+def handlefunction1():
+    data = request.get_json()
+    username = data.get('username')
+    player_status = get_status_without_printing(username)
+    money = player_status[0]
+    money += 2000
+    print(f"You've gained 2000 money. Your new money value is {money}")
+    try:
+        cursor = conn.cursor()
+        update_query = "UPDATE game SET money = %s WHERE username = %s"
+        cursor.execute(update_query, (money, username))
+        conn.commit()
+        result = get_status(username)
+        return result
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
+
+
+@app.route('/handlefunction2', methods=['POST'])
+def handlefunction2():
+    data = request.get_json()
+    username = data.get('username')
+    player_status = get_status_without_printing(username)
+    fuel_efficiency = player_status[4]
+    fuel_efficiency += 0.2
+    print(f"Your fuel efficiency has increased by 0.2. It's now {fuel_efficiency}")
+    try:
+        cursor = conn.cursor()
+        update_query = "UPDATE game SET fuel_efficiency = %s WHERE username = %s"
+        cursor.execute(update_query, (fuel_efficiency, username))
+        conn.commit()
+        result = get_status(username)
+        return result
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
 if __name__ == '__main__':
     app.run(debug=True)
