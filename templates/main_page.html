@@ -43,8 +43,8 @@
     <div class="column">
       <img src="../static/peoplesaved.png" alt="Image 3">
       <div class="info">
-        <p>People saved:</p>
-      <p id = "peopleSaved" >0</p>
+        <p>Saved (max 150):</p>
+      <p id = "peopleSaved" ><span id="peoplered"></span> / 100 people</p>
         </div>
     </div>
 
@@ -80,16 +80,17 @@
     <div class="column right-column">
       <div class="right-section" id="question">
       </div>
-      <div class="middle-button-container">
+      <div class="middle-button-container" style="display: flex;flex-direction: column;">
    <button class="middle-button" onclick="refreshCountry()">Spend 500 money to refresh countries</button>
+          <p id="norefresh" class="norefresh"></p>
       </div>
       <div class="right-section button-section">
         <input type="text" id="userInput" placeholder="Buy Fuel">
-        <button onclick="submitUserInput()">Submit</button>
+        <button onclick="submitUserInput()">Buy Fuel</button>
         <div class = "fuel">
         <p>Currently, 1 money can buy </p>
         <p id="currentprice"></p>
-        <p>gas</p>
+        <p>fuel</p>
           </div>
         <p id="fuelinfo"></p>
       </div>
@@ -99,11 +100,11 @@
         <a class="back-button" onclick="playSoundAndRedirect()">Safe & Exit</a>
         </div>
 <!--<div id="map"></div>-->
-<dialog id="dialog1">
+<dialog id="dialog1" class="dialog1" >
         <span class="close-modal" onclick="closeModal1()">&#x2715;</span>
         <img id="modal-image" alt="Large Image" src="../static/gameover.png">
     </dialog>
-<dialog id="dialog2">
+<dialog id="dialog2" class="dialog2">
         <span class="close-modal" onclick="closeModal2()">&#x2715;</span>
         <img id="modal-image" alt="Large Image" src="../static/winner.png">
     </dialog>

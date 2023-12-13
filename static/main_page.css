@@ -21,6 +21,7 @@ body {
       margin-top: 10px;
       background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
       font-size: 10px;
+      border: 3px solid black;
   }
 
   .column {
@@ -117,6 +118,9 @@ background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
        margin-top: 10px;
        margin-right: 90px;
    }
+   #map.column1 {
+  border: 3px solid black;
+}
 
    .right-section input[type="text"] {
     width: 50%;
@@ -138,7 +142,6 @@ background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
        margin-right: 100px;
 }
 
-  /* Add this style to increase the size of the submit button */
   .right-section button {
       font-family: TechnoRaceItalic-font;
     padding: 10px;
@@ -193,12 +196,13 @@ dialog span {
 
 .back-button:hover {
     background-color: #45a049; /* Darker green on hover */
-
+    transform: scale(1.05);
+    transition: all 0.3s;}
 
   @media (max-width: 768px) {
     /* Adjust column width for smaller screens */
     .column {
       flex: 1 0 100%;
       margin: 0 0 20px 0;
-    }
+    }}
 

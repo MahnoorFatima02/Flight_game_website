@@ -1,4 +1,6 @@
 'use strict';
+let backgroundMusic = document.getElementById('backgroundMusic');
+    backgroundMusic.volume = 0.5;
 let username = localStorage.getItem('loggedInUsername');
 function playSoundAndRedirect() {
     var audio = document.getElementById('buttonClickSound');
@@ -52,16 +54,74 @@ function createRedMarker(latitude, longitude) {
     marker.bindPopup("You are here");
     marker.addTo(markerGroup);
 }
-const dialog1 = document.getElementById('dialog1');
-const dialog2 = document.getElementById('dialog2');
 function openModal1() {
-            dialog1.showModal();}
+        var dialog = document.getElementById('dialog1');
+        dialog.style.display = 'flex';
+        dialog.style.flexDirection = 'column';
+        var button = document.createElement('button');
+        button.innerHTML = 'Play Again';
+        button.style.marginTop = '20px';
+        button.style.alignSelf = 'center';
+        button.style.display = 'inline-block';
+        button.style.backgroundColor = '#4CAF50';
+        button.style.color = '#fff';
+        button.style.padding = '25px 30px';
+        button.style.borderRadius = '10px';
+        button.style.cursor = 'pointer';
+        button.style.fontSize = '25px';
+        button.style.fontFamily = 'TechnoRaceItalic-font';
+        button.style.textDecoration = 'none !important';
+        button.onclick = function() {
+            closeModal1();
+            console.log("Restart game.")
+            startOver();
+        };
+        dialog.appendChild(button);
+        dialog.showModal();
+    }
 function openModal2() {
-            dialog2.showModal();}
+        var dialog = document.getElementById('dialog2');
+        dialog.style.display = 'flex';
+        dialog.style.flexDirection = 'column';
+        var button = document.createElement('button');
+        button.innerHTML = 'Play Again';
+        button.style.marginTop = '20px';
+        button.style.alignSelf = 'center';
+        button.style.display = 'inline-block';
+        button.style.backgroundColor = '#4CAF50';
+        button.style.color = '#fff';
+        button.style.padding = '25px 30px';
+        button.style.borderRadius = '10px';
+        button.style.cursor = 'pointer';
+        button.style.fontSize = '25px';
+        button.style.fontFamily = 'TechnoRaceItalic-font';
+        button.style.textDecoration = 'none !important';
+        button.onclick = function() {
+            closeModal2();
+            console.log("Restart game.")
+            startOver();
+        };
+        dialog.appendChild(button);
+        dialog.showModal();
+    }
 function closeModal1() {
-            dialog1.close();}
+        var dialog = document.getElementById('dialog1');
+        dialog.style = '';
+        var button = document.querySelector('#dialog1 button');
+        if (button) {
+            button.remove();
+        }
+        dialog.close();
+    }
 function closeModal2() {
-            dialog2.close();}
+        var dialog = document.getElementById('dialog2');
+        dialog.style = '';
+        var button = document.querySelector('#dialog1 button');
+        if (button) {
+            button.remove();
+        }
+        dialog.close();
+    }
 function clearData() {
   let fuelinfo = document.getElementById("fuelinfo");
   fuelinfo.innerHTML = '';
@@ -70,7 +130,6 @@ function clearData2() {
   let question = document.getElementById("question");
   question.innerHTML = '';
 }
-
 function updateStatus(data) {
   let player = document.getElementById("player");
   player.textContent = data.player;
@@ -78,17 +137,29 @@ function updateStatus(data) {
   currentcountry.textContent = data.currentlocation;
   let money = document.getElementById("money");
   money.textContent = data.money;
-  let peopleSaved = document.getElementById("peopleSaved");
+  let peopleSaved = document.getElementById("peoplered");
   peopleSaved.textContent = data.people_saved;
   let fuelEfficiency = document.getElementById("fuelEfficiency");
   fuelEfficiency.textContent = data.fuel_efficiency;
   let placesVisited = document.getElementById("placesVisited");
-  placesVisited.textContent = data.municipality_visited;
+  placesVisited.textContent = `${data.municipality_visited} / 5`;
   let fuel = document.getElementById("fuel");
   fuel.textContent = data.fuel;
   let currentprice = document.getElementById("currentprice");
   currentprice.textContent = data.fuel_price;
   createRedMarker(data.lat,data.long);
+  if (parseInt(data.people_saved) > 100){
+      peopleSaved.style.color = 'darkred';
+  }
+  if (parseInt(data.people_saved) < 100){
+      peopleSaved.style.color = 'black';
+  }
+  if (parseInt(data.fuel) < 10000){
+      fuel.style.color = 'darkred';
+  }
+  if (parseInt(data.fuel) >= 10000){
+      fuel.style.color = 'black';
+  }
 }
 async function fetchStatus() {
   const response = await fetch('/status', {
@@ -100,7 +171,7 @@ async function fetchStatus() {
     });
 
     const data = await response.json();
-    if (data) {
+    if (data.player) {
         console.log(data);
         updateStatus(data);
     } else {
@@ -108,7 +179,6 @@ async function fetchStatus() {
     }
 }
 async function refreshCountry(){
-    playSound();
     const response = await fetch('/refresh', {
         method: 'POST',
         headers: {
@@ -117,17 +187,38 @@ async function refreshCountry(){
         body: JSON.stringify({username}),
     });
     const data = await response.json();
-    if (data) {
+    if (data.player) {
+        playSound();
         updateStatus(data);
         fetchCountries();}
+    else if (data.false) {
+        playSoundcurse();
+        let norefresh = document.getElementById("norefresh");
+        norefresh.textContent = "You don't have enough money";
+        norefresh.style.alignSelf = 'center';
+        norefresh.style.marginRight = '110px';
+        norefresh.style.display = 'inline-block';
+        norefresh.style.backgroundColor = 'darkred';
+        norefresh.style.color = '#fff';
+        norefresh.style.padding = '20px 25px';
+        norefresh.style.borderRadius = '10px';
+        norefresh.style.cursor = 'pointer';
+        norefresh.style.fontSize = '20px';
+        norefresh.style.fontFamily = 'TechnoRaceItalic-font';
+        norefresh.style.textDecoration = 'none !important';
+        setTimeout(() => {
+            norefresh.style =''
+            norefresh.innerHTML = '';
+            }, "4000");
+    }
      else {
         alert("Refresh failed");}
 }
-
 async function submitUserInput() {
-    playSoundbuy();
-    let amount = document.getElementById("userInput").value;
-    const response = await fetch('/buyfuel', {
+    let amount1 = document.getElementById("userInput").value;
+    let amount = parseInt(amount1);
+    if (!isNaN(amount) && Number.isInteger(amount) && amount > 0){
+        const response = await fetch('/buyfuel', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -135,7 +226,8 @@ async function submitUserInput() {
         body: JSON.stringify({username, amount}),
     });
     const data = await response.json();
-    if (data) {
+    if (data.player) {
+        playSoundbuy();
         let fuelinfo = document.getElementById("fuelinfo");
         let questionParagraph = document.createElement("p");
         questionParagraph.textContent = "After buying, you have: ";
@@ -152,10 +244,31 @@ async function submitUserInput() {
         setTimeout(() => {
             clearData();
             }, "4000");
-}
+    } else if (!data.result) {
+        playSoundcurse();
+        let fuelinfo = document.getElementById("fuelinfo");
+        let questionParagraph = document.createElement("p");
+        questionParagraph.textContent = "Purchase failed, you dont have enough money :(";
+        fuelinfo.appendChild(questionParagraph);
+        setTimeout(() => {
+            clearData();
+            }, "4000");
+    }
      else {
         alert("Purchase failed");
     }
+    } else {
+        playSoundcurse();
+        let fuelinfo = document.getElementById("fuelinfo");
+        let questionParagraph = document.createElement("p");
+        questionParagraph.textContent = "Please enter a valid number >0 :(";
+        fuelinfo.appendChild(questionParagraph);
+        setTimeout(() => {
+            clearData();
+            }, "4000");
+
+    }
+
 }
 async function fetchCountries() {
   clearData2();
@@ -215,7 +328,7 @@ async function fetchAirports(country) {
   removeAllMarkers();
   data["airports"].forEach((a) => {
     L.marker([a.latitude, a.longitude]).addTo(markerGroup)
-    .bindPopup(`${a.airport} has ${a.people} people and fuel price of ${a.fuel_price}`);
+    .bindPopup(`${a.airport} has ${a.people} people and fuel price of ${a.fuel_price}.${a.probability}`);
 
     let airportOption = document.createElement("button");
     airportOption.textContent = decodeURI(a.airport);
@@ -237,7 +350,7 @@ async function travel(airportName) {
         body: JSON.stringify({username,airport_name}),
     });
     const data = await response.json();
-    if (data) {
+    if (data.player) {
         console.log(data);
         updateStatus(data);
         fetchAirportStatus(airport_name);
@@ -302,6 +415,7 @@ async function fetchAirportStatus(airportname) {
 }
 function createBlessAirportElements() {
     playSoundbless();
+    clearData2();
   let airportStatus = document.getElementById("question");
   let statusParagraph = document.createElement("p");
   statusParagraph.textContent = "You have found a reward chest. Choose 1 option ";
@@ -323,6 +437,7 @@ function createBlessAirportElements() {
  }
  function createRobAirportElements() {
     playSoundcurse();
+    clearData2();
   let airportStatus = document.getElementById("question");
   let statusParagraph = document.createElement("p");
   statusParagraph.textContent = "You have received a curse. Choose 1 option ";
@@ -351,7 +466,7 @@ async function handleOption1() {
         body: JSON.stringify({username}),
     });
     const data = await response.json();
-    if (data){
+    if (data.player){
         updateStatus(data);
         fetchCountries();
     } else {
@@ -367,7 +482,7 @@ async function handleOption2() {
         body: JSON.stringify({username}),
     });
     const data = await response.json();
-    if (data){
+    if (data.player){
         updateStatus(data);
         fetchCountries();
     } else {
@@ -383,7 +498,7 @@ async function handleOption3() {
         body: JSON.stringify({username}),
     });
     const data = await response.json();
-    if (data){
+    if (data.player){
         updateStatus(data);
         fetchCountries();
     } else {
@@ -399,12 +514,42 @@ async function handleOption4() {
         body: JSON.stringify({username}),
     });
     const data = await response.json();
-    if (data){
+    if (data.player){
         updateStatus(data);
         fetchCountries();
     } else {
         console.log("Choice 4 failed.");
     }
 }
-fetchStatus();
-fetchCountries();
+async function startOver() {
+    const response = await fetch('/startover', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username}),
+    });
+    const data = await response.json();
+    if (data.player) {
+        console.log(data);
+        updateStatus(data);
+        fetchCountries();
+    } else {
+        alert("Status update failed.");
+    }
+}
+async function main(){
+  await fetchStatus();
+  if (parseInt(fuel.textContent) < 0 || parseInt(peopleSaved.textContent) > 150 || parseInt(peopleSaved.textContent) >= 100 && parseInt(placesVisited.textContent) >= 5) {
+    let userResponse = confirm("\"Do you want to play again?\nOK to play again or Cancel to not." );
+    if (userResponse) {
+      clearData();
+      startOver();
+    } else if (!userResponse) {
+        window.location.href = '/'
+    }
+  } else {
+    fetchCountries();
+  }
+}
+main();

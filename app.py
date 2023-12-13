@@ -101,8 +101,6 @@ def select_three_random_countries():
     except mysql.connector.Error as err:
         print("Error: {}".format(err))
         return None
-
-
 def get_airport_status_without_printing(airport):
     try:
         cursor = conn.cursor()
@@ -115,19 +113,6 @@ def get_airport_status_without_printing(airport):
     except mysql.connector.Error as err:
         print("Error: {}".format(err))
         return None
-def start_over():
-    username = request.headers['username']
-    try:
-        cursor = conn.cursor()
-        update_query = "Update game set fuel = 1000, money = 3000, people_saved=0, municipality_visited=0, location='EFHK' where username = %s"
-        cursor.execute(update_query, (username,))
-        conn.commit()
-        result = get_status(username)
-        return result
-    except mysql.connector.Error as err:
-        print("Error: {}".format(err))
-        return None
-
 
 @app.route('/')
 def gamewebsite():
@@ -203,18 +188,21 @@ def refresh():
     result = get_status_without_printing(username)
     money = int(result[0])
     money = money - 500
-    try:
-        cursor = conn.cursor()
-        update_query = "UPDATE game SET money = %s WHERE username = %s"
-        cursor.execute(update_query, (money, username))
-        conn.commit()
-        result = get_status(username)
+    if money >= 0:
+        try:
+            cursor = conn.cursor()
+            update_query = "UPDATE game SET money = %s WHERE username = %s"
+            cursor.execute(update_query, (money, username))
+            conn.commit()
+            result = get_status(username)
+            return result
+        except mysql.connector.Error as err:
+            print("Error: {}".format(err))
+            return None
+    elif money < 0:
+        print("You dont have enough money to refresh.")
+        result = {"false": 1}
         return result
-    except mysql.connector.Error as err:
-        print("Error: {}".format(err))
-        return None
-
-
 @app.route('/buyfuel', methods=['POST'])
 def buy_fuel():
     data = request.get_json()
@@ -222,26 +210,28 @@ def buy_fuel():
     amount = data.get('amount')
 
     result = get_status_without_printing(username)
-    money = result[0]
-    fuel = result[1]
-    fuel_price = result[6]
+    money = int(result[0])
+    fuel = int(result[1])
+    fuel_price = int(result[6])
     spending = int(amount)
     if money >= spending:
         fuel += spending * fuel_price
         money -= spending
         print(f"Your total fuel now is {fuel}, and you have {money} money left.")
-    else:
+        try:
+            cursor = conn.cursor()
+            update_query = "UPDATE game SET money = %s, fuel = %s WHERE username = %s"
+            cursor.execute(update_query, (money, fuel, username))
+            conn.commit()
+            result = get_status(username)
+            return result
+        except mysql.connector.Error as err:
+            print("Error: {}".format(err))
+            return None
+    elif money < spending:
         print("You don't have enough money to buy fuel.")
-    try:
-        cursor = conn.cursor()
-        update_query = "UPDATE game SET money = %s, fuel = %s WHERE username = %s"
-        cursor.execute(update_query, (money, fuel, username))
-        conn.commit()
-        result = get_status(username)
+        result = {"result":False}
         return result
-    except mysql.connector.Error as err:
-        print("Error: {}".format(err))
-        return None
 @app.route('/fetchcountries', methods=['GET'])
 def get_countries():
     countrylist = select_three_random_countries()
@@ -298,7 +288,6 @@ def get_airport_status():
     except mysql.connector.Error as err:
         print("Error: {}".format(err))
         return None
-
 @app.route('/handlefunction1', methods=['POST'])
 def handlefunction1():
     data = request.get_json()
@@ -365,6 +354,20 @@ def handlefunction4():
         cursor = conn.cursor()
         update_query = "UPDATE game SET fuel_efficiency = %s WHERE username = %s"
         cursor.execute(update_query, (fuel_efficiency, username))
+        conn.commit()
+        result = get_status(username)
+        return result
+    except mysql.connector.Error as err:
+        print("Error: {}".format(err))
+        return None
+@app.route('/startover', methods=['POST'])
+def start_over():
+    data = request.get_json()
+    username = data.get('username')
+    try:
+        cursor = conn.cursor()
+        update_query = "Update game set fuel = 3000, money = 2000, people_saved=0, municipality_visited=0, location='EFHK', fuel_efficiency=0.8 where username = %s"
+        cursor.execute(update_query, (username,))
         conn.commit()
         result = get_status(username)
         return result

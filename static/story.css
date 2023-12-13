@@ -76,3 +76,5 @@ body {
 
 .back-button:hover {
     background-color: #45a049; /* Darker green on hover */
+    transform: scale(1.05);
+    transition: all 0.3s;}
