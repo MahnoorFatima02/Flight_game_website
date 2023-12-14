@@ -15,6 +15,35 @@ conn = mysql.connector.connect(
     password='database123',
     autocommit=True
 )
+class Player:
+    def __init__(self, username):
+        self.username = username
+        self.details = self.player_details()
+        self.money = self.details[0]
+        self.fuel = self.details[1]
+        self.people_saved = self.details[2]
+        self.countries_visited = self.details[3]
+        self.fuel_efficiency = self.details[4]
+        self.current_airport = self.details[5]
+        self.current_fuel_price = self.details[6]
+        self.current_country = self.details[7]
+        self.current_ident = self.details[8]
+        self.current_coordinate = (self.details[9],self.details[10])
+
+    def player_details(self):
+        try:
+
+            cursor = conn.cursor()
+            query = "SELECT money, fuel, people_saved, municipality_visited, fuel_efficiency, airport.name, fuel_price, country.name, location, latitude_deg, longitude_deg FROM game, airport, country WHERE location = ident and airport.iso_country=country.iso_country and username = %s"
+            cursor.execute(query, (self.username, ))
+            player_details = cursor.fetchone()
+            cursor.close()
+
+            return player_details
+
+        except Exception as e:
+            print(f"Error: {e}")
+            return None
 def distance(a,b):
     dist = geodesic(a, b).kilometers
     return dist
