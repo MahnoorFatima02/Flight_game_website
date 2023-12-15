@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="../static/story.css">
+</head>
+<body>
+<audio id="backgroundMusic" loop autoplay>
+    <source src="../static/backgroundmusic.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+</audio>
+ <audio id="buttonClickSound" src="../static/button.mp3" preload="auto"></audio>
+    <div class="fade-in">
+        <div class="paragraph-container">
+            <img src="../static/pic1.png" alt="Image 1" class="small-image">
+            <p>A new deadly disease has quickly spread across Earth, threatened to destroy civilization.<br>
+Scientists has built a safe zone in Helsinki Vantaa Airport that protects people from the disease.<br>
+You were a pilot for Finnair before the disease, now you will fly to rescue people worldwide.</p>
+        </div>
+        <div class="paragraph-container">
+            <p>Your mission is to rescue 100 people from at least 5 countries.<br>
+You have some money and fuel at first, and you earn 50 money per person you rescue.<br>
+Remember to refuel before taking off and be mindful of the plane capacity for passengers.<br>
+If you rescue more than 150 people, the plane will crash.</p>
+            <img src="../static/pic2.png" alt="Image 2" class="small-image">
+        </div>
+        <div class="paragraph-container">
+            <img src="../static/pic3.png" alt="Image 3" class="small-image">
+            <p>Each airport has their own fuel price, so remember to buy more when fuel is cheap.<br>
+Each airport has 25% chance to get buffs or debuffs.<br>
+You can gain or lose money, or change how efficiently your plane uses fuel.<br>
+1 fuel travels 0.8 kilometer when fuel efficiency is 0.8.</p>
+        </div>
+        <div class="paragraph-container">
+            <p>Good luck and have fun!</p>
+        </div>
+    </div>
+    <script src="../static/story.js"></script>
+    <div class="goToHome">
+        <a class="back-button" onclick="playSoundAndRedirect()">Start game</a>
+        </div>
+</body>
+</html>
+
+
+

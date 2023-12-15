@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/game_website_css.css">
+    <title>Flight Hero</title>
+</head>
+<body>
+ <audio id="backgroundMusic" loop muted>
+    <source src="../static/backgroundmusic.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+</audio>
+ <audio id="buttonClickSound" src="../static/button.mp3" preload="auto"></audio>
+    <div class="container">
+        <h1>Flight Hero</h1>
+        <div class="buttons">
+            <a class="start-button" onclick="playSoundAndRedirect1()">Login</a>
+            <a class="story-button" onclick="playSoundAndRedirect2()">Story</a>
+        </div>
+    </div>
+<script src="../static/game_website.js"></script>
+</body>
+</html>

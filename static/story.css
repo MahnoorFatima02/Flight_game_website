@@ -1,0 +1,80 @@
+@font-face {
+    font-family: TechnoRaceItalic-font;
+    src: url('TechnoRaceItalic-eZRWe.otf') format('truetype');
+}
+
+body {
+    font-family: "Berlin Sans FB";
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url("game_background.jpg");
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+}
+
+.fade-in {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.paragraph-container {
+    display: flex;
+    align-items: center;
+    font-size: 27px;
+    background-color: rgba(255, 255, 255, 0.8); /* White color at 80% opacity */
+    border-radius: 10px; /* Rounded corners */
+    padding: 15px; /* Adjust padding as needed */
+    margin-top: 20px;
+}
+
+.paragraph-container p {
+    line-height: 1.2; /* Adjust the value to increase or decrease the line spacing */
+}
+
+.paragraph-container:nth-child(2) p {
+    text-align: right;
+}
+
+.small-image {
+    max-width: 180px;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.fade-in div {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.fade-in div.active {
+    opacity: 1;
+}
+
+.goToHome {
+    font-size: 1em;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.back-button {
+    display: inline-block; /* Ensures the link behaves like a block-level element */
+    background-color: #4CAF50; /* Green background color */
+    color: #fff; /* White text color */
+    padding: 25px 40px; /* Increased padding for a larger button */
+    border-radius: 10px; /* Rounded corners */
+    cursor: pointer; /* Cursor style on hover */
+    font-size: 30px; /* Increased text size */
+    font-family: TechnoRaceItalic-font;
+    text-decoration: none !important; /* Remove underline with !important to override default styles */
+}
+
+.back-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: scale(1.05);
+    transition: all 0.3s;}

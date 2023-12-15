@@ -1,0 +1,87 @@
+@font-face {
+    font-family: TechnoRaceItalic-font;
+    src: url('TechnoRaceItalic-eZRWe.otf')  format('truetype');
+  }
+
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url("game_background.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: TechnoRaceItalic-font;
+}
+
+.container {
+    text-align: center;
+    color: #130303;
+}
+
+h1 {
+    font-size: 8.5em;
+    color: aliceblue;
+    text-shadow: 4px 4px 4px #000;
+    -webkit-text-stroke: 2px black; /* Outline color */
+    color: white; /* Inside color */
+    margin: 0;
+
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.start-button {
+    margin-right: 40px;
+    display: inline-block; /* Ensures the link behaves like a block-level element */
+    background-color: #4CAF50; /* Green background color */
+    color: #fff; /* White text color */
+    padding: 25px 40px; /* Increased padding for a larger button */
+    border-radius: 10px; /* Rounded corners */
+    cursor: pointer; /* Cursor style on hover */
+    font-size: 30px; /* Increased text size */
+    font-family: TechnoRaceItalic-font;
+    text-decoration: none !important; /* Remove underline with !important to override default styles */
+}
+
+.start-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: scale(1.05);
+    transition: all 0.3s;
+}
+
+.story-button {
+    display: inline-block; /* Ensures the link behaves like a block-level element */
+    background-color: #3498db; /* Green background color */
+    color: #fff; /* White text color */
+    padding: 25px 40px; /* Increased padding for a larger button */
+    border-radius: 10px; /* Rounded corners */
+    cursor: pointer; /* Cursor style on hover */
+    font-size: 30px; /* Increased text size */
+    font-family: TechnoRaceItalic-font;
+    text-decoration: none !important; /* Remove underline with !important to override default styles */
+}
+
+.story-button:hover {
+    background-color: #2980b9; /* Darker green on hover */
+    transform: scale(1.05);
+    transition: all 0.3s;
+}
+
+.paragraph-container p {
+    background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
+    border-radius: 10px; /* Adjust the border-radius for rounded corners */
+    padding: 10px; /* Adjust the padding as needed */
+    margin: 0; /* Remove default margin to avoid extra spacing */
+}

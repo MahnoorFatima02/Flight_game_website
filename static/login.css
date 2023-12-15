@@ -1,0 +1,66 @@
+@font-face {
+    font-family: TechnoRaceItalic-font;
+    src: url('TechnoRaceItalic-eZRWe.otf') format('truetype');
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+    font-family: TechnoRaceItalic-font, sans-serif;
+    background-image: url('game_background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+h2 {
+    font-size: 50px; /* Adjust the font size as needed */
+}
+.login-container {
+    background-color: #fff;
+    padding: 40px; /* Increased padding */
+    border-radius: 12px; /* Increased border radius */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Increased box shadow */
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 16px; /* Increased margin */
+    font-size: 25px; /* Increased font size */
+}
+
+input {
+    padding: 12px; /* Increased padding */
+    margin-bottom: 24px; /* Increased margin */
+    font-size: 25px; /* Increased font size */
+}
+
+button {
+    font-family: TechnoRaceItalic-font;
+    padding: 15px; /* Increased padding */
+    font-size: 25px; /* Increased font size */
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px; /* Increased border radius */
+    margin-bottom: 24px; /* Increased margin */
+}
+button:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: scale(1.05);
+    transition: all 0.3s;}
+
+.error-message {
+    color: red;
+    font-size: 25px; /* Increased font size */
+}

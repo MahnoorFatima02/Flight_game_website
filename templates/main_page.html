@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="../static/main_page.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+</head>
+<body>
+<audio id="backgroundMusic" loop autoplay>
+    <source src="../static/backgroundmusic.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+</audio>
+<audio id="buttonClickSound" src="../static/button.mp3" preload="auto"></audio>
+<audio id="buy" src="../static/buy.mp3" preload="auto"></audio>
+<audio id="bless" src="../static/bless.mp3" preload="auto"></audio>
+<audio id="curse" src="../static/curse.mp3" preload="auto"></audio>
+<audio id="win" src="../static/win.mp3" preload="auto"></audio>
+<audio id="lose" src="../static/lose.mp3" preload="auto"></audio>
+<audio id="fly" src="../static/fly.mp3" preload="auto"></audio>
+  <div class="container">
+    <div class="column">
+      <img src="../static/pilot.png" alt="Image 1" class="icon">
+      <div class="info">
+      <p id = "player">Pilot:</p>
+      <p id = "currentlocation" >Text for Image 1</p>
+        </div>
+    </div>
+
+    <div class="column">
+      <img src="../static/money.png" alt="Image 2" class="icon">
+      <div class="info">
+      <p>Money:</p>
+      <p id = "money" >3000</p>
+        </div>
+    </div>
+
+    <div class="column">
+      <img src="../static/peoplesaved.png" alt="Image 3">
+      <div class="info">
+        <p>Saved (max 150):</p>
+      <p id = "peopleSaved" ><span id="peoplered"></span> / 100 people</p>
+        </div>
+    </div>
+
+    <div class="column">
+      <img src="../static/fuelefficiency.png" alt="Image 4">
+      <div class="info">
+      <p>Fuel Efficiency:</p>
+      <p id = "fuelEfficiency">0.8</p>
+        </div>
+    </div>
+
+    <div class="column">
+      <img src="../static/placesvisited.png" alt="Image 5">
+      <div class="info">
+        <p>Places Visited:</p>
+      <p id = "placesVisited">0</p>
+        </div>
+    </div>
+
+    <div class="column">
+        <img src="../static/fuel.png" alt="Image 5">
+      <div class="info">
+        <p>Fuel:</p>
+        <p id = "fuel">1000</p>
+      </div>
+    </div>
+  </div>
+  <div class="center-container">
+    <div class="column1" id="map">
+
+    </div>
+
+    <div class="column right-column">
+      <div class="right-section" id="question">
+      </div>
+      <div class="middle-button-container" style="display: flex;flex-direction: column;">
+   <button class="middle-button" onclick="refreshCountry()">Spend 500 money to refresh countries</button>
+          <p id="norefresh" class="norefresh"></p>
+      </div>
+      <div class="right-section button-section">
+        <input type="text" id="userInput" placeholder="Buy Fuel">
+        <button onclick="submitUserInput()">Buy Fuel</button>
+        <div class = "fuel">
+        <p>Currently, 1 money can buy </p>
+        <p id="currentprice"></p>
+        <p>fuel</p>
+          </div>
+        <p id="fuelinfo"></p>
+      </div>
+    </div>
+  </div>
+<div class="goToHome">
+        <a class="back-button" onclick="playSoundAndRedirect()">Safe & Exit</a>
+        </div>
+<!--<div id="map"></div>-->
+<dialog id="dialog1" class="dialog1" >
+        <span class="close-modal" onclick="closeModal1()">&#x2715;</span>
+        <img id="modal-image" alt="Large Image" src="../static/gameover.png">
+    </dialog>
+<dialog id="dialog2" class="dialog2">
+        <span class="close-modal" onclick="closeModal2()">&#x2715;</span>
+        <img id="modal-image" alt="Large Image" src="../static/winner.png">
+    </dialog>
+<script src = "../static/main_page.js"> </script>
+</body>
+</html>
